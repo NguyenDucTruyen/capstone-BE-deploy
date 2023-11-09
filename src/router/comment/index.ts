@@ -1,9 +1,5 @@
-import commentController from './comment.controller';
 import commentService from './comment.service';
+import commentController from './comment.controller';
 import commentRouter from './comment.router';
 
-export {
-    commentRouter,
-    commentController,
-    commentService
-}
+export { commentService, commentController, commentRouter };

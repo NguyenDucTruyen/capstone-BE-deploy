@@ -1,9 +1,11 @@
 import express from 'express';
-import { commentController } from './index'
+import { verify } from '../../middleware/';
+import commentController from './comment.controller';
 const router = express.Router();
 
-router.get('/', commentController.getCommentsByBlogId);
-router.post('/', commentController.postComment);
-router.patch('/:id', commentController.updateComment);
+router.get('/:blogId/comments', commentController.getComments);
+router.post('/:blogId/comments', verify ,commentController.createComment)
+router.patch('/comments/:commentId', commentController.updateComment)
+router.delete('/comments/:commentId',commentController.deleteComment);
 
 export default router;

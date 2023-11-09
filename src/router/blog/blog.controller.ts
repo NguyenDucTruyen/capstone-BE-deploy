@@ -38,7 +38,7 @@ class blogController {
         try {
             const { page, limit } = req.query;
             const blogs = await blogService.getBlogAwaitingApproval(page,limit);
-            return res.status(200).json(blogs);
+            return HttpResponseBuilder.buildOK(res,blogs);
         } catch (error:any) {
             next(HttpResponseBuilder.buildBadRequest(res,error.message));
         }
