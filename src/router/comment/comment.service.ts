@@ -4,7 +4,7 @@ class UserService {
       constructor() {
       }
       getCommentsByIdBlog(blogId) {
-            return Comment.find({blogId:blogId});
+            return Comment.find({blogId:blogId}).populate({ path: 'userId' ,  select: 'firstName profileImage' });
         }  
       createComment(userId,blogId,content) {
             const user = User.findOne({_id:userId});

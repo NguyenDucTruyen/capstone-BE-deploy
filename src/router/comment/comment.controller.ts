@@ -13,19 +13,18 @@ class CommentController {
         }
     }
     async createComment(req, res) {
-        // try {
-        //     console.log("aaaaaaaaaaaaaaaaaaaaaaa");
+
+        try {            
+            const { blogId } = req.params;
+            const  id  = req.userToken.id
+            const { content } = req.body;
+            console.log("userId",id + "blogId",blogId + "content",content);
             
-        //     const { blogId } = req.params;
-        //     const { userId } = req.userToken.id
-        //     const { content } = req.body;
-        //     console.log("userId",userId + "blogId",blogId + "content",content);
-            
-        //     const data = await commentService.createComment( userId, blogId, content);
-        //     return HttpResponseBuilder.buildCreated(res,data);
-        // } catch (error) {
-        //     return HttpResponseBuilder.buildBadRequest(res, error);
-        // }
+            const data = await commentService.createComment( id, blogId, content);
+            return HttpResponseBuilder.buildCreated(res,data);
+        } catch (error) {
+            return HttpResponseBuilder.buildBadRequest(res, error);
+        }
     }
     async updateComment(req, res) {
         try {

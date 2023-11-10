@@ -79,7 +79,7 @@ class UserController {
     }
     async getMe(req, res, next) {
         try {
-            const { id } = req.user;
+            const id = req.userToken.id;
             const user = await userService.getUserById(id);
             return HttpResponseBuilder.buildOK(res, user);
         } catch(error) {
