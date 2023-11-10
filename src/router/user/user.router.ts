@@ -4,6 +4,7 @@ import { validateUserUpdate, verify, checkAuthor,validateStatusUser } from '../.
 const router = express.Router();
 
 router.get('/', checkAuthor(['ADMIN','MODERATOR']) ,userController.getUsers);
+router.get('/me',userController.getMe);
 router.get('/:id', userController.getUserById);
 router.put('/:id',validateUserUpdate ,verify,checkAuthor(['ADMIN','MODERATOR']),userController.updateUser);
 router.delete('/:id',verify, checkAuthor(['ADMIN','MODERATOR']) , userController.deleteUser);

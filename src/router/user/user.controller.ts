@@ -77,6 +77,15 @@ class UserController {
             next(error);
         }
     }
+    async getMe(req, res, next) {
+        try {
+            const { id } = req.user;
+            const user = await userService.getUserById(id);
+            return HttpResponseBuilder.buildOK(res, user);
+        } catch(error) {
+            next(error);
+        }
+    }
 
 }
 
