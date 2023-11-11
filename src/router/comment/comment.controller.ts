@@ -3,16 +3,16 @@ import { HttpResponseBuilder } from '../../middleware/error';
 class CommentController {
     constructor() {
     }  
-    async getComments(req, res) {
+    async getComments(req, res, next) {
         try {
             const { blogId} = req.params;
             const data = await commentService.getCommentsByIdBlog(blogId);
             return HttpResponseBuilder.buildOK(res,data);
         } catch (error) {
-            return HttpResponseBuilder.buildBadRequest(res, error);
+            next(error);
         }
     }
-    async createComment(req, res) {
+    async createComment(req, res, next) {
 
         try {            
             const { blogId } = req.params;
@@ -23,10 +23,10 @@ class CommentController {
             const data = await commentService.createComment( id, blogId, content);
             return HttpResponseBuilder.buildCreated(res,data);
         } catch (error) {
-            return HttpResponseBuilder.buildBadRequest(res, error);
+            next
         }
     }
-    async updateComment(req, res) {
+    async updateComment(req, res, next) {
         try {
             const { blogId } = req.params;
             const { userId } = req.userToken.id
@@ -34,16 +34,16 @@ class CommentController {
             await commentService.updateComment( userId, blogId, content);
             return HttpResponseBuilder.buildOK(res,{'message':'update comment success'});
         } catch (error) {
-            return HttpResponseBuilder.buildBadRequest(res, error);
+            next
         }
     }
-    async deleteComment(req, res) {
+    async deleteComment(req, res, next) {
         try {
             const {  commentId } = req.params;
             await commentService.deleteComment(commentId);
             return HttpResponseBuilder.buildOK(res,{commentId});
         } catch (error) {
-            return HttpResponseBuilder.buildBadRequest(res, error);
+            next
         }
     }
 }

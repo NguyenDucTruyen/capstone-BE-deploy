@@ -11,7 +11,7 @@ class categoryController {
             
             return HttpResponseBuilder.buildOK(res, data);
         } catch (error:any) {
-            next(HttpResponseBuilder);
+            next(error);
         }
     }
     createCategory(req, res, next) {
@@ -19,7 +19,7 @@ class categoryController {
             const category = categoryService.createCategory(req.body);
             return HttpResponseBuilder.buildCreated(res, category);
         } catch (error:any) {
-            next(HttpResponseBuilder.buildBadRequest(res, error.message));
+            next(error);
         }
     }
 }

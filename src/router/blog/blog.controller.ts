@@ -11,7 +11,7 @@ class blogController {
             const blogs = await blogService.getAllBlogs(page,limit);
             return HttpResponseBuilder.buildOK(res, blogs);
         } catch (error:any) {
-            next(HttpResponseBuilder.buildBadRequest(res,error.message));
+            next(error);
         }
     }
     async createBlog(req, res, next) {
@@ -20,7 +20,7 @@ class blogController {
             const blog = await blogService.createBlogByIdUser(userId,req.body);
             return HttpResponseBuilder.buildCreated(res, blog);
         } catch (error:any) {
-            next(HttpResponseBuilder.buildBadRequest(res,error.message));
+            next(error);
        }
     }
     async updateBlog(req, res, next) {
@@ -31,7 +31,7 @@ class blogController {
             const blog = await blogService.updateBlogByIdUser(userId,id,req.body);
             return HttpResponseBuilder.buildOK(res, blog);
         } catch (error:any) {
-            next(HttpResponseBuilder.buildBadRequest(res,error.message));
+            next(error);
         }
     }
     async getBlogAwaitingApproval(req, res, next) {
@@ -40,7 +40,7 @@ class blogController {
             const blogs = await blogService.getBlogAwaitingApproval(page,limit);
             return HttpResponseBuilder.buildOK(res,blogs);
         } catch (error:any) {
-            next(HttpResponseBuilder.buildBadRequest(res,error.message));
+            next(error);
         }
     }
     async approvedOrRejectBlog(req, res, next) {
@@ -53,7 +53,7 @@ class blogController {
             
             return HttpResponseBuilder.buildOK(res,{message: 'Approved or reject blog successfully'});
         } catch (error:any) {
-            next(HttpResponseBuilder.buildBadRequest(res,error.message));
+            next(error);
         }
     }
     async getNewestBlog(req, res, next) {
@@ -61,7 +61,7 @@ class blogController {
             const blogs = await blogService.getNewestBlog();
             return HttpResponseBuilder.buildOK(res, blogs);
         } catch (error:any) {
-            next(HttpResponseBuilder.buildBadRequest(res,error.message));
+            next(error);
         }
     }
     async getPopularBlog(req, res, next) {
@@ -69,7 +69,7 @@ class blogController {
             const blogs = await blogService.getPopularBlog();
             return HttpResponseBuilder.buildOK(res, blogs);
         } catch (error:any) {
-            next(HttpResponseBuilder.buildBadRequest(res,error.message));
+            next(error);
         }
     }
 }
