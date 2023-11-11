@@ -14,8 +14,8 @@ class UserService {
             }
             return Comment.create({userId:userId,blogId:blogId,content:content});
         }  
-      updateComment(userId,blogId,content) {
-            return Comment.updateOne({userId:userId,blogId:blogId},{content:content});
+      updateComment(userId,content) {
+            return Comment.updateOne({userId:userId,},{content:content});
         }
       deleteComment(commentId) {
             return Comment.deleteOne({commentId});

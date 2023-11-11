@@ -13,10 +13,8 @@ export  function verify(req, res, next) {
       }
   
       const accessToken = req.headers.authorization;
-     
-      const token = accessToken.split(' ')[1];
-      
-      if (token) {
+      if (accessToken) {
+        const token = accessToken.split(' ')[1];
         jwt.verify(token, jwtSecret, (err, decoded) => {
           if (err) {
             throw HttpResponseBuilder.buildUnAuthorized(res, err.message);

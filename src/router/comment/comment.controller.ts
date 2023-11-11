@@ -5,7 +5,7 @@ class CommentController {
     }  
     async getComments(req, res, next) {
         try {
-            const { blogId} = req.params;
+            const blogId  = req.params.blogId;
             const data = await commentService.getCommentsByIdBlog(blogId);
             return HttpResponseBuilder.buildOK(res,data);
         } catch (error) {
@@ -23,27 +23,39 @@ class CommentController {
             const data = await commentService.createComment( id, blogId, content);
             return HttpResponseBuilder.buildCreated(res,data);
         } catch (error) {
-            next
+            next(error)
         }
     }
     async updateComment(req, res, next) {
         try {
-            const { blogId } = req.params;
-            const { userId } = req.userToken.id
+            console.log(req.userToken);
+            
+            const  userId  = req.userToken.id
             const { content } = req.body;
-            await commentService.updateComment( userId, blogId, content);
+            await commentService.updateComment( userId, content);
             return HttpResponseBuilder.buildOK(res,{'message':'update comment success'});
         } catch (error) {
-            next
+            next(error)
         }
     }
     async deleteComment(req, res, next) {
         try {
-            const {  commentId } = req.params;
+            const commentId  = req.params;
             await commentService.deleteComment(commentId);
             return HttpResponseBuilder.buildOK(res,{commentId});
         } catch (error) {
-            next
+            next(error)
+        }
+    }
+    async createReply(req, res, next) {
+        try {
+            const { commentId } = req.params;
+            const { content } = req.body;
+            const userId = req.userToken.id;
+            await commentService.createReply(userId,commentId,content);
+            return HttpResponseBuilder.buildOK(res,{message:'create reply success'});
+        } catch (error) {
+            next(error)
         }
     }
 }
