@@ -94,7 +94,7 @@ class blogService {
         const blogUpdated = await blog.save();
         return blogUpdated;
     }
-    async getNewestBlog(limit=1, page=1000) {
+    async getNewestBlog(limit=100000, page=1) {
         const options = {
             page,
             limit,
@@ -138,10 +138,9 @@ class blogService {
         console.log(popularBlogs);
         
         const paginatedResult:any = await Blog.paginate({}, options);
-
+        paginatedResult.docs = popularBlogs;
         return {
-            docs: popularBlogs,
-            ...paginatedResult
+            paginatedResult
         };
     }
     async getBlogById(id) {

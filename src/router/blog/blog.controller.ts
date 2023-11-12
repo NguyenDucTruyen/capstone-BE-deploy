@@ -58,6 +58,8 @@ class blogController {
     }
     async getNewestBlog(req, res, next) {
         try {
+            console.log("aaaaaaaaaaaaaaaaaa");
+            
             const blogs = await blogService.getNewestBlog();
             return HttpResponseBuilder.buildOK(res, blogs);
         } catch (error:any) {
