@@ -1,4 +1,6 @@
 const errorHandler = (err, req, res, next) => {
+  console.log("aaaaaaaaaaa");
+  
   console.log('ERROR LOG ', new Date().toLocaleString());
   console.log('Request:', req.method, req.originalUrl);
   console.log('Params:', req.params);

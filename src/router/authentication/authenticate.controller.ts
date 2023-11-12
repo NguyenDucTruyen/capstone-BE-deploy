@@ -6,10 +6,10 @@ class AuthenticationController {
     async register(req, res, next) {
         try {
             const { password, email } = req.body;      
-            await authenticateService.register( password, email)
-            return HttpResponseBuilder.buildOK(res, {message:"Register successfully."});
-        } catch (error) {
-            next(error);
+            await authenticateService.register(password, email);
+            return HttpResponseBuilder.buildOK(res, { message: "Register successfully." });
+        } catch (error:any) {
+            HttpResponseBuilder.buildBadRequest(res, error.message);
         }
     }
     async login(req, res, next) {
