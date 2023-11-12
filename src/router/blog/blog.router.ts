@@ -11,4 +11,5 @@ router.get('/awaiting-approval', verify, checkAuthor(['ADMIN','MODERATOR']),blog
 router.patch('/:id/review', verify, checkAuthor(['ADMIN','MODERATOR']),blogController.approvedOrRejectBlog);
 router.get('/newest', blogController.getNewestBlog);
 router.get('/popular', blogController.getPopularBlog);
+router.get('/:id', blogController.getBlogById);
 export default router;

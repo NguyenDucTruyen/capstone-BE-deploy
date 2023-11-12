@@ -72,6 +72,15 @@ class blogController {
             next(error);
         }
     }
+    async getBlogById(req, res, next) {
+        try {
+            const { id } = req.params;
+            const blog = await blogService.getBlogById(id);
+            return HttpResponseBuilder.buildOK(res, blog);
+        } catch (error:any) {
+            next(error);
+        }
+    }
 }
 
 export default new blogController();

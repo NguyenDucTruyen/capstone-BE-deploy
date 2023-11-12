@@ -1,4 +1,5 @@
-const errorHandler = (err, req, res, next) => {
+
+export default function errorHandler(err, req, res, next) {
   console.log("aaaaaaaaaaa");
   
   console.log('ERROR LOG ', new Date().toLocaleString());
@@ -18,11 +19,10 @@ const errorHandler = (err, req, res, next) => {
   const status = err.status || 500; // Set a default status code if not provided
 
   if (res && res.status) {
-    res.status(status).json(error);
+    return res.status(status).json(error)
   } else {
     // If res is not available or doesn't have the status method, log an error
     console.error('Error: Unable to send response. Response object may be missing or modified.');
   }
-};
+}
 
-export default errorHandler;

@@ -78,9 +78,11 @@ class blogService {
     async getBlogAwaitingApproval(page,limit) {
         if(page === undefined || limit === undefined)
         {
-            return await Blog.find({ deleted: false, status: statusBlogEnum.PENDING });
+            return await Blog.find({ deleted: false, status: statusBlogEnum.PENDING })
+            .populate('userId');
         }
-        return await Blog.paginate({ deleted: false, status: statusBlogEnum.PENDING }, { page, limit, myCustomLabels });
+        return await Blog.paginate({ deleted: false, status: statusBlogEnum.PENDING }, { page, limit, myCustomLabels })
+        .populate('userId');
     }
     async approvedOrRejectBlog(id, status) {
         const blog = await Blog.findById(id);
@@ -93,7 +95,7 @@ class blogService {
         return blogUpdated;
     }
     async getNewestBlog() {
-        return await Blog.find({ deleted: false, status: statusBlogEnum.APPROVED }).sort({ createdAt: -1 }).limit(5);
+        return await Blog.find({ deleted: false, status: statusBlogEnum.APPROVED }).sort({ createdAt: -1 }).limit(5).populate({ path: 'userId'});
     }
     async getPopularBlog() {
         // function get popular blog find follow reaction lenght > 10
@@ -117,6 +119,13 @@ class blogService {
         ]);
     
         return popularBlogs;
+    }
+    async getBlogById(id) {
+        const blog = await Blog.findById(id).populate('userId');
+        if (!blog) {
+            throw new Error('Blog not found');
+        }
+        return blog;
     }
 }
 

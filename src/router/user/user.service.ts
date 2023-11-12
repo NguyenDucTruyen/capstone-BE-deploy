@@ -26,8 +26,9 @@ class UserService {
             throw error;
         }
     }
-    async updateUser(id, body) {    
+    async updateUser(idToken, id, body) {    
         try {
+            if (idToken !== id) throw new Error('You are not authorized to update this user');
             const user = await User.findById({_id:id,deleted:false});
             if(!user) throw new Error('User not found');
             user.set(body);

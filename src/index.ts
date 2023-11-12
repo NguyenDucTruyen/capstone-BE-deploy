@@ -11,13 +11,13 @@ const PORT = process.env.PORT || 3000;
 app.use('/api', routers);
 
 
+
+
+app.use(errorHandler);
 app.get('/ping', (_req, res) => {
   console.log('someone pinged here');
   return res.send('pong');
 });
-
-app.use(errorHandler);
-
 
 dbConfig.connect();
 

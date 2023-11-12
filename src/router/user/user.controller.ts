@@ -20,7 +20,8 @@ class UserController {
         try {
             const { id } = req.params;
             const { body } = req;
-            const user = await userService.updateUser(id, body);
+            const idToken = req.userToken.id;
+            const user = await userService.updateUser(idToken, id, body);
             return HttpResponseBuilder.buildOK(res,{ message: 'User updated successfully' , user });
         }catch(error)
         {
