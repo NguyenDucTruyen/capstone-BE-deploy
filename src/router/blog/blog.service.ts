@@ -15,12 +15,12 @@ class blogService {
     async getAllBlogs(page,limit) {
         if(page === undefined || limit === undefined)
         {
-            return await Blog.find({ deleted: false, status: statusBlogEnum.APPROVED });
+            return await Blog.find({ deleted: false, status: statusBlogEnum.APPROVED }).populate({ path: 'userId'});
         }
         const options = {
             page,
             limit,
-            populate: { path: 'userId', select: 'name' },
+            populate: { path: 'userId' },
             sort: { createdAt: -1 },
             myCustomLabels,
         };
