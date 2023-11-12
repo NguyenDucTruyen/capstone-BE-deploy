@@ -87,6 +87,18 @@ class UserController {
             next(error);
         }
     }
+    async getBlogsByUserId(req, res, next) {
+        try {
+            console.log("aaaaa");
+            
+            const { id } = req.params;
+            const { page, limit } = req.query;
+            const blogs = await userService.getBlogsByUserId(id, page, limit);
+            return HttpResponseBuilder.buildOK(res, blogs);
+        } catch(error) {
+            next(error);
+        }
+    }
 
 }
 

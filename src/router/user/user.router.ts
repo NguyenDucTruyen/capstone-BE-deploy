@@ -3,6 +3,7 @@ import { userController } from './index';
 import { validateUserUpdate, verify, checkAuthor,validateStatusUser } from '../../middleware/';
 const router = express.Router();
 
+router.get('/:id/blogs', userController.getBlogsByUserId);
 router.get('/', checkAuthor(['ADMIN','MODERATOR']) ,userController.getUsers);
 router.get('/me',userController.getMe);
 router.get('/:id', userController.getUserById);

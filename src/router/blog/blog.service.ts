@@ -12,15 +12,11 @@ class blogService {
         }
         return false;
     }
-    async getAllBlogs(page,limit) {
-        if(page === undefined || limit === undefined)
-        {
-            return await Blog.find({ deleted: false, status: statusBlogEnum.APPROVED }).populate({ path: 'userId'});
-        }
+    async getAllBlogs(page=1,limit=1000) {
         const options = {
             page,
             limit,
-            populate: { path: 'userId' },
+            populate: { path: 'userId' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt' },
             sort: { createdAt: -1 },
             myCustomLabels,
         };
@@ -75,14 +71,18 @@ class blogService {
             throw new Error(error.message);
         }
     }
-    async getBlogAwaitingApproval(page,limit) {
-        if(page === undefined || limit === undefined)
-        {
-            return await Blog.find({ deleted: false, status: statusBlogEnum.PENDING })
-            .populate('userId');
-        }
-        return await Blog.paginate({ deleted: false, status: statusBlogEnum.PENDING }, { page, limit, myCustomLabels })
-        .populate('userId');
+    async getBlogAwaitingApproval(page=1,limit=1000) {
+        const options = {
+            page,
+            limit,
+            populate: { path: 'userId' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt' },
+            sort: { createdAt: -1 },
+            myCustomLabels,
+        };
+        return await Blog.paginate({ deleted: false, status: statusBlogEnum.PENDING }, options, function (err, result) {
+            if (err) throw new Error('Error');
+            return result;
+        });
     }
     async approvedOrRejectBlog(id, status) {
         const blog = await Blog.findById(id);
@@ -94,11 +94,29 @@ class blogService {
         const blogUpdated = await blog.save();
         return blogUpdated;
     }
-    async getNewestBlog() {
-        return await Blog.find({ deleted: false, status: statusBlogEnum.APPROVED }).sort({ createdAt: -1 }).limit(5).populate({ path: 'userId'});
+    async getNewestBlog(limit=1, page=1000) {
+        const options = {
+            page,
+            limit,
+            populate: { path: 'userId' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt' },
+            sort: { createdAt: -1 },
+            myCustomLabels,
+        };
+        console.log(options);
+        
+        return await Blog.paginate({ deleted: false, status: statusBlogEnum.APPROVED }, options, function (err, result) {
+            if (err) throw new Error('Error');
+            return result;
+        })  
     }
-    async getPopularBlog() {
-        // function get popular blog find follow reaction lenght > 10
+    async getPopularBlog(page=1,limit=1000) {
+        const options = {
+            page,
+            limit,
+            populate: { path: 'userId' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt' },
+            sort: { createdAt: -1 },
+            myCustomLabels,
+        };
         const popularBlogs = await Blog.aggregate([
             {
                 $match: {
@@ -117,8 +135,14 @@ class blogService {
                 }
             }
         ]);
-    
-        return popularBlogs;
+        console.log(popularBlogs);
+        
+        const paginatedResult:any = await Blog.paginate({}, options);
+
+        return {
+            docs: popularBlogs,
+            ...paginatedResult
+        };
     }
     async getBlogById(id) {
         const blog = await Blog.findById(id).populate('userId');

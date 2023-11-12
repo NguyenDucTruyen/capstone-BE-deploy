@@ -20,7 +20,7 @@ class categoryService {
         const options = {
           page,
           limit,
-          populate: { path: 'userId', select: 'name' },
+          populate: { path: 'userId' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt' },
           sort: { createdAt: -1 },
           myCustomLabels, // Define myCustomLabels somewhere in your code
         };
