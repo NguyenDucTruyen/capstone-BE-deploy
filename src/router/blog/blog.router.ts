@@ -1,6 +1,6 @@
 import express from 'express';
 import { blogController } from './index'
-import { checkAuthor, verify } from '../../middleware';
+import { checkAuthor, verify,validateUpdateBlogs } from '../../middleware';
 const router = express.Router();
 
 router.get('/awaiting-approval', verify, checkAuthor(['ADMIN','MODERATOR']),blogController.getBlogAwaitingApproval);
@@ -10,6 +10,6 @@ router.patch('/:id/review', verify, checkAuthor(['ADMIN','MODERATOR']),blogContr
 router.get('/', blogController.getBlogs);
 router.post('/', verify, blogController.createBlog);
 router.get('/:id', blogController.getBlogById);
-router.patch('/:id', verify, blogController.updateBlog);
+router.patch('/:id', verify,validateUpdateBlogs, blogController.updateBlog);
 
 export default router;
