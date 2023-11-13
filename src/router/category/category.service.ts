@@ -46,6 +46,11 @@ class categoryService {
         const categoryCreated = await Category.create(category);
         return categoryCreated;
     }
+    async getListCategories() {
+        const categories = await Category.find({deleted: false}).populate({ path:'parentId', select:'name slug description'} );
+        return categories;
+    }
+
 }
 
 export default new categoryService()

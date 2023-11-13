@@ -5,10 +5,10 @@ class blogController {
     }
     async getBlogs(req, res, next) {
         try {
-            const { page, limit } = req.query;
+            const { page, limit, title, content, category } = req.query;
             page ? page : null;
             limit ? limit : null;
-            const blogs = await blogService.getAllBlogs(page,limit);
+            const blogs = await blogService.getAllBlogs(page,limit, title, content, category);
             return HttpResponseBuilder.buildOK(res, blogs);
         } catch (error:any) {
             next(error);
@@ -60,7 +60,6 @@ class blogController {
     }
     async getNewestBlog(req, res, next) {
         try {
-            console.log("aaaaaaaaaaaaaaaaaa");
             
             const blogs = await blogService.getNewestBlog();
             return HttpResponseBuilder.buildOK(res, blogs);

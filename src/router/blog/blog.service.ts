@@ -11,20 +11,33 @@ class blogService {
         }
         return false;
     }
-    async getAllBlogs(page=1,limit=1000) {
+    async getAllBlogs(page=1,limit=1000, title, content, category) {
         const options = {
             page,
             limit,
+            search: { title, content, category },
             populate: { path: 'userId' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt' },
             sort: { createdAt: -1 },
             myCustomLabels,
         };
-        const blogs = await Blog.paginate({ deleted: false, status: statusBlogEnum.APPROVED }, options, function (err, result) {
+        const query:any = {
+            deleted: false,
+            status: statusBlogEnum.APPROVED,
+          };
+        if (title) {
+            query.title = { $regex: title, $options: 'i' };
+        }
+        if (content) {
+            query.content = { $regex: content, $options: 'i' };
+        }
+        if (category) {
+            query.category = category;
+        }
+        return await Blog.paginate(query, options, function (err, result) {
             if (err)
             throw new Error('Error');
             return result;
         });
-        return blogs;
     }
     async createBlogByIdUser(userId, body) {
         console.log("aaaa" + userId);
@@ -43,9 +56,10 @@ class blogService {
         return blogCreated;
     }
     async updateBlogByIdUser(userId, id, body) {
-        try {
             const blog = await Blog.findOne({ _id: id, deleted: false, status: statusBlogEnum.APPROVED });
-    
+            if(blog.userId._id.toString() !== userId.toString()) {
+                throw new Error('User is not author');
+            }
             if (!blog) {
                 throw new Error('Blog not found or not approved.');
             }
@@ -72,9 +86,6 @@ class blogService {
             const updatedBlog = await blog.save();
             
             return updatedBlog;
-        } catch (error:any) {
-            throw new Error(error.message);
-        }
     }
     
     async getBlogAwaitingApproval(page=1,limit=1000) {

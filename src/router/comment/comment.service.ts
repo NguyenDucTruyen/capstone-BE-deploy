@@ -24,7 +24,7 @@ class UserService {
         }
       deleteComment(userId, commentId) {
             const comment: any = Comment.findById(commentId);
-            if( comment.userId !== userId)
+            if( comment.userId !== userId )
             {
                   return new Error('User is not comment');
             }

@@ -6,6 +6,8 @@ class categoryController {
     }
     async getCategories(req, res, next) {
         try {
+            console.log("hehehe");
+            
             const { slug } = req.params;
             const data = await categoryService.getCategories(slug, req.query.page, req.query.limit);
             
@@ -19,6 +21,16 @@ class categoryController {
             const category = categoryService.createCategory(req.body);
             return HttpResponseBuilder.buildCreated(res, category);
         } catch (error:any) {
+            next(error);
+        }
+    }
+    async getListCategories(req, res, next) {
+        try {
+            const categories =await categoryService.getListCategories();
+            console.log(categories);
+            
+            return HttpResponseBuilder.buildOK(res, categories);
+        } catch (error) {
             next(error);
         }
     }
