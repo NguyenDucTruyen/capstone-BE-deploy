@@ -27,8 +27,10 @@ class blogController {
         try {
             const { id } = req.params;
             const userId = req.userToken.id;
-            console.log(userId);
+            console.log("userid "+ userId);
             const blog = await blogService.updateBlogByIdUser(userId,id,req.body);
+            console.log(blog);
+            
             return HttpResponseBuilder.buildOK(res, blog);
         } catch (error:any) {
             next(error);

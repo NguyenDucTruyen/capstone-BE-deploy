@@ -1,7 +1,6 @@
 import { Blog, User } from "../../database/models";
 import { isActiveEnum, statusBlogEnum } from "../../database/models/enum";
 import { myCustomLabels } from "../../constant";
-import { Category } from "../../database/models";
 class blogService {
     constructor() {
     }
@@ -45,32 +44,39 @@ class blogService {
     }
     async updateBlogByIdUser(userId, id, body) {
         try {
-            if(body.category) {
-                body.category = await Category.findById(body.category);
-                const blogUpdated = await Blog.findOneAndUpdate({ _id: id, deleted:false }, body, { new: true });
-            return blogUpdated;
-            } 
-            if(body.blogImages) {
-                const blogUpdated = await Blog.findOneAndUpdate({ _id: id, deleted:false  }, body, { new: true });
-            return blogUpdated;
+            const blog = await Blog.findOne({ _id: id, deleted: false, status: statusBlogEnum.APPROVED });
+    
+            if (!blog) {
+                throw new Error('Blog not found or not approved.');
             }
-            if(body.reaction) {
-                console.log(body.reaction);
-                
-                const blog = await Blog.findOne({ _id: id, deleted: false, status: statusBlogEnum.APPROVED});
-                console.log(blog);
-                
+    
+            if (body.title) {
+                blog.title = body.title;
+            }
+    
+            if (body.content) {
+                blog.content = body.content;
+            }
+    
+            if (body.blogImage) {
+                blog.blogImage = body.blogImage;
+            }
+    
+            if (body.reaction) {
                 blog.reaction.push({
                     userId: userId,
                     reaction: body.reaction,
                 });
-                const updatedBlog = await blog.save();
-            return updatedBlog;
             }
+
+            const updatedBlog = await blog.save();
+            
+            return updatedBlog;
         } catch (error:any) {
             throw new Error(error.message);
         }
     }
+    
     async getBlogAwaitingApproval(page=1,limit=1000) {
         const options = {
             page,
