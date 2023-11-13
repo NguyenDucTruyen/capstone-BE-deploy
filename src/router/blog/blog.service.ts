@@ -57,9 +57,6 @@ class blogService {
     }
     async updateBlogByIdUser(userId, id, body) {
             const blog = await Blog.findOne({ _id: id, deleted: false, status: statusBlogEnum.APPROVED });
-            if(blog.userId._id.toString() !== userId.toString()) {
-                throw new Error('User is not author');
-            }
             if (!blog) {
                 throw new Error('Blog not found or not approved.');
             }
@@ -77,10 +74,22 @@ class blogService {
             }
     
             if (body.reaction) {
+                // check user is reaction
+                const index = blog.reaction.findIndex((item) => item.userId == userId);
+                if (index !== -1) {
+                    // check like or dislike
+                    if (blog.reaction[index].reaction == body.reaction)
+                    {
+                        blog.reaction.splice(index, 1);
+                    } else {
+                        blog.reaction[index].reaction = body.reaction;
+                    }
+                } else {
                 blog.reaction.push({
                     userId: userId,
                     reaction: body.reaction,
                 });
+            }
             }
 
             const updatedBlog = await blog.save();
@@ -126,40 +135,30 @@ class blogService {
             return result;
         })  
     }
-    async getPopularBlog(page=1,limit=1000) {
-        const options = {
+    async getPopularBlog(page = 1, limit = 5) {
+        try {
+          const options = {
             page,
             limit,
-            populate: { path: 'userId' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt' },
-            sort: { createdAt: -1 },
-            myCustomLabels,
-        };
-        const popularBlogs = await Blog.aggregate([
-            {
-                $match: {
-                    deleted: false,
-                    status: statusBlogEnum.APPROVED
-                }
+            populate: {
+              path: 'userId',
+              select: '_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt',
             },
-            {
-                $addFields: {
-                    reactionCount: { $size: "$reaction" }
-                }
+            sort: {
+              reactionCount: -1, // Sort in descending order based on the "reactionCount" field
             },
-            {
-                $match: {
-                    reactionCount: { $gt: 1 }
-                }
-            }
-        ]);
-        console.log(popularBlogs);
-        
-        const paginatedResult:any = await Blog.paginate({}, options);
-        paginatedResult.docs = popularBlogs;
-        return {
-            paginatedResult
-        };
-    }
+          };
+      
+          const query = {
+            deleted: false,
+            status: statusBlogEnum.APPROVED,
+          };
+          const result = await Blog.paginate(query, options);
+          return result;
+        } catch (error:any) {
+          throw new Error(error.message);
+        }
+      }
     async getBlogById(id) {
         const blog = await Blog.findById(id).populate('userId');
         if (!blog) {
