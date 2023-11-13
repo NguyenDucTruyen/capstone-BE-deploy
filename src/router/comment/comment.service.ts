@@ -1,5 +1,6 @@
 import { Comment,User } from '../../database/models';
 import { isActiveEnum } from '../../database/models/enum';
+import { ErrorBuilder } from '../../middleware/error';
 class UserService {
       constructor() {
       }
@@ -14,19 +15,20 @@ class UserService {
             }
             return Comment.create({userId:userId,blogId:blogId,content:content});
         }  
-      updateComment(userId, commentId, content) {
-            const comment: any = Comment.findById(commentId);
-            if( comment.userId !== userId)
+      async updateComment(userId, commentId, content) {
+            const comment: any = await Comment.findById(commentId);
+            console.log(comment.userId != userId);
+            if( comment.userId != userId )
             {
-                  return new Error('User is not comment');
+                  throw new Error('User is not comment');
             }
             return Comment.updateOne({_id:commentId},{$set:{content:content}});
         }
       deleteComment(userId, commentId) {
             const comment: any = Comment.findById(commentId);
-            if( comment.userId !== userId )
+            if( comment.userId != userId )
             {
-                  return new Error('User is not comment');
+                  throw ErrorBuilder.badRequest('User is not comment');
             }
             return Comment.deleteOne({commentId});
       }

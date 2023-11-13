@@ -28,7 +28,6 @@ class CommentController {
     }
     async updateComment(req, res, next) {
         try {
-            console.log(req.userToken);
             const { commentId } = req.params;
             const  userId  = req.userToken.id
             const { content } = req.body;
