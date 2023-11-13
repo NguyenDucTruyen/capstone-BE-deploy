@@ -11,5 +11,6 @@ router.get('/', blogController.getBlogs);
 router.post('/', verify, blogController.createBlog);
 router.get('/:id', blogController.getBlogById);
 router.patch('/:id', verify,validateUpdateBlogs, blogController.updateBlog);
+router.delete('/:id', verify, checkAuthor(['ADMIN','MODERATOR','USER']), blogController.deleteBlog);
 
 export default router;

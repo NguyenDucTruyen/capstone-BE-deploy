@@ -1,6 +1,7 @@
 import { Comment,User } from '../../database/models';
 import { isActiveEnum } from '../../database/models/enum';
 import { ErrorBuilder } from '../../middleware/error';
+import { userService } from '../user';
 class UserService {
       constructor() {
       }
@@ -18,19 +19,21 @@ class UserService {
       async updateComment(userId, commentId, content) {
             const comment: any = await Comment.findById(commentId);
             console.log(comment.userId != userId);
-            if( comment.userId != userId )
+            if( comment.userId == userId || await userService.isAdmin(userId) )
             {
-                  throw new Error('User is not comment');
+                  return Comment.updateOne({_id:commentId},{$set:{content:content}});
+            } else {
+                  throw new Error('User is not owner comment');
             }
-            return Comment.updateOne({_id:commentId},{$set:{content:content}});
         }
-      deleteComment(userId, commentId) {
+      async deleteComment(userId, commentId) {
             const comment: any = Comment.findById(commentId);
-            if( comment.userId != userId )
+            if( comment.userId == userId || await userService.isAdmin(userId) )
             {
-                  throw ErrorBuilder.badRequest('User is not comment');
+                  return Comment.deleteOne({commentId});
+            } else {
+                  throw new Error('User is not owner comment');
             }
-            return Comment.deleteOne({commentId});
       }
       createReply(userId,commentId,content) {
             return Comment.updateOne({_id:commentId},{$push:{reply:{userId:userId,content:content}}});

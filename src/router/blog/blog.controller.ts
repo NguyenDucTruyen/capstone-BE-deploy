@@ -83,6 +83,16 @@ class blogController {
             next(error);
         }
     }
+    async deleteBlog(req, res, next) {
+        try {
+            const { id } = req.params;
+            const userId = req.userToken.id;
+            const blog = await blogService.deleteBlogByIdUser(userId,id);
+            return HttpResponseBuilder.buildOK(res, { message: 'Blog deleted successfully' , blog });
+        } catch (error:any) {
+            next(error);
+        }
+    }
 }
 
 export default new blogController();

@@ -24,13 +24,25 @@ class UserService {
             throw error;
         }
     }
+    async isAdmin(id) {
+            const user =await User.findById({_id:id,deleted:false});
+            if(!user) throw new Error('User not found');
+            if(user.roleName == 'ADMIN' || user.roleName == 'MODERATOR') return true;
+            return false;
+    }
+        
     async updateUser(idToken, id, body) {    
         try {
-            if (idToken !== id) throw new Error('You are not authorized to update this user');
+            
+            // check admin or moderator can edit user
+            if (idToken == id || await this.isAdmin(idToken)) {
             const user = await User.findById({_id:id,deleted:false});
             if(!user) throw new Error('User not found');
             user.set(body);
             await user.save();
+            } else {
+                throw new Error('You are not allowed to edit this user');
+            }
         } catch(error) {
             throw error;
         }

@@ -1,6 +1,8 @@
 import { Blog, User } from "../../database/models";
 import { isActiveEnum, statusBlogEnum } from "../../database/models/enum";
 import { myCustomLabels } from "../../constant";
+import { userService } from "../user";
+
 class blogService {
     constructor() {
     }
@@ -60,41 +62,42 @@ class blogService {
             if (!blog) {
                 throw new Error('Blog not found or not approved.');
             }
-    
-            if (body.title) {
-                blog.title = body.title;
-            }
-    
-            if (body.content) {
-                blog.content = body.content;
-            }
-    
-            if (body.blogImage) {
-                blog.blogImage = body.blogImage;
-            }
-    
-            if (body.reaction) {
-                // check user is reaction
-                const index = blog.reaction.findIndex((item) => item.userId == userId);
-                if (index !== -1) {
-                    // check like or dislike
-                    if (blog.reaction[index].reaction == body.reaction)
-                    {
-                        blog.reaction.splice(index, 1);
+            if (blog.userId.toString() == userId || await userService.isAdmin(userId)) {
+                if (body.title) {
+                    blog.title = body.title;
+                }
+        
+                if (body.content) {
+                    blog.content = body.content;
+                }
+        
+                if (body.blogImage) {
+                    blog.blogImage = body.blogImage;
+                }
+        
+                if (body.reaction) {
+                    // check user is reaction
+                    const index = blog.reaction.findIndex((item) => item.userId == userId);
+                    if (index !== -1) {
+                        // check like or dislike
+                        if (blog.reaction[index].reaction == body.reaction)
+                        {
+                            blog.reaction.splice(index, 1);
+                        } else {
+                            blog.reaction[index].reaction = body.reaction;
+                        }
                     } else {
-                        blog.reaction[index].reaction = body.reaction;
-                    }
-                } else {
-                blog.reaction.push({
-                    userId: userId,
-                    reaction: body.reaction,
-                });
+                    blog.reaction.push({
+                        userId: userId,
+                        reaction: body.reaction,
+                    });
+                }
+                }
+                const updatedBlog = await blog.save();
+                return updatedBlog;
+            } else {
+                throw new Error('User is not owner of blog');
             }
-            }
-
-            const updatedBlog = await blog.save();
-            
-            return updatedBlog;
     }
     
     async getBlogAwaitingApproval(page=1,limit=1000) {
@@ -165,6 +168,17 @@ class blogService {
             throw new Error('Blog not found');
         }
         return blog;
+    }
+    async deleteBlogByIdUser(userId, id) {
+        const blog = await Blog.findOne({ _id: id, deleted: false });
+        if (!blog) {
+            throw new Error('Blog not found');
+        }
+        if (blog.userId.toString() == userId || await userService.isAdmin(userId)) {
+            return await Blog.delete();
+        } else {
+            throw new Error('User is not owner of blog');
+        }
     }
 }
 
