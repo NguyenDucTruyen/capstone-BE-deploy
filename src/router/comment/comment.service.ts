@@ -1,10 +1,11 @@
 import { Comment,User } from '../../database/models';
 import { isActiveEnum } from '../../database/models/enum';
+import { IComment } from '../../database/models/interface'
 class UserService {
       constructor() {
       }
       getCommentsByIdBlog(blogId) {
-            return Comment.find({blogId:blogId}).populate({ path: 'userId' ,  select: 'firstName profileImage' });
+            return Comment.find({blogId:blogId}).populate({ path: 'userId' ,  select: 'firstName lastName profileImage' }).populate({ path: 'reply.userId' ,  select: 'firstName lastName profileImage' });
         }  
       createComment(userId,blogId,content) {
             const user = User.findOne({_id:userId});
@@ -14,10 +15,20 @@ class UserService {
             }
             return Comment.create({userId:userId,blogId:blogId,content:content});
         }  
-      updateComment(userId,content) {
-            return Comment.updateOne({userId:userId,},{content:content});
+      updateComment(userId, commentId, content) {
+            const comment: any = Comment.findById(commentId);
+            if( comment.userId !== userId)
+            {
+                  return new Error('User is not comment');
+            }
+            return Comment.updateOne({_id:commentId},{$set:{content:content}});
         }
-      deleteComment(commentId) {
+      deleteComment(userId, commentId) {
+            const comment: any = Comment.findById(commentId);
+            if( comment.userId !== userId)
+            {
+                  return new Error('User is not comment');
+            }
             return Comment.deleteOne({commentId});
       }
       createReply(userId,commentId,content) {

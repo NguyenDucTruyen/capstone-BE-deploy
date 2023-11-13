@@ -25,8 +25,9 @@ class AuthenticationService {
     async register(password, email) {
         const existingUser = await User.findOne({ email: email, deleted: false });
         if (existingUser) {
-            console.log("Email already exists");
-            throw new Error("Email already exists");
+            const error:any = new Error("Email already exists");
+            error.status = 400;
+            throw error;
         }
     
         const salt = bcrypt.genSaltSync(10);
@@ -59,7 +60,9 @@ class AuthenticationService {
     async forgotPassword(email) {
         const user =await User.findOne({ email: email, deleted: false });
             if (user === null) {
-                throw new Error("Email not exists");
+                const error:any = new Error("Email not exists");
+                error.status = 404;
+                throw error;
             }
         const htmlTemplate = `
         <html>
@@ -129,7 +132,7 @@ class AuthenticationService {
         `;
         try {
             mailService.sendMail(email, "Forgot Password", "", htmlTemplate);
-        } catch (error) {
+        } catch (error:any) {
             throw error;
         }
     }

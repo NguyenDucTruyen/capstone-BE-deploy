@@ -29,10 +29,10 @@ class CommentController {
     async updateComment(req, res, next) {
         try {
             console.log(req.userToken);
-            
+            const { commentId } = req.params;
             const  userId  = req.userToken.id
             const { content } = req.body;
-            await commentService.updateComment( userId, content);
+            await commentService.updateComment( userId, commentId, content);
             return HttpResponseBuilder.buildOK(res,{'message':'update comment success'});
         } catch (error) {
             next(error)
@@ -41,7 +41,8 @@ class CommentController {
     async deleteComment(req, res, next) {
         try {
             const commentId  = req.params;
-            await commentService.deleteComment(commentId);
+            const userId = req.userToken.id;
+            await commentService.deleteComment(userId, commentId);
             return HttpResponseBuilder.buildOK(res,{commentId});
         } catch (error) {
             next(error)
