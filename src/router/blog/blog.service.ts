@@ -18,7 +18,7 @@ class blogService {
             page,
             limit,
             search: { title, content, category },
-            populate: { path: 'userId category' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt', },
+            populate: { path: 'userId category' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt name slug status' },
             sort: { createdAt: -1 },
             myCustomLabels,
         };
