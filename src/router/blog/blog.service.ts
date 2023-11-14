@@ -105,7 +105,7 @@ class blogService {
         const options = {
             page,
             limit,
-            populate: { path: 'userId' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt' },
+            populate: { path: 'userId category' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt name slug status' },
             sort: { createdAt: -1 },
             myCustomLabels,
         };
@@ -128,7 +128,7 @@ class blogService {
         const options = {
             page,
             limit,
-            populate: { path: 'userId' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt' },
+            populate: { path: 'userId category' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt name slug status' },
             sort: { createdAt: -1 },
             myCustomLabels,
         };
@@ -145,8 +145,8 @@ class blogService {
             page,
             limit,
             populate: {
-              path: 'userId',
-              select: '_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt',
+              path: 'userId category',
+              select: '_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt name slug status',
             },
             sort: {
               reactionCount: -1, // Sort in descending order based on the "reactionCount" field
@@ -164,7 +164,7 @@ class blogService {
         }
       }
     async getBlogById(id) {
-        const blog = await Blog.findById(id).populate('userId')
+        const blog = await Blog.findById(id).populate({ path: 'userId category' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt name slug status' })
         if (!blog) {
             throw new Error('Blog not found');
         }
