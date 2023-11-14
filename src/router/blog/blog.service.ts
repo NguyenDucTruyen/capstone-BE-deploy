@@ -51,6 +51,7 @@ class blogService {
             userId: userId,
             title: body.title,
             content: body.content,
+            category: body.category,
             blogImage: body.blogImages,
             status: statusBlogEnum.PENDING,
         })
@@ -62,7 +63,6 @@ class blogService {
             if (!blog) {
                 throw new Error('Blog not found or not approved.');
             }
-            if (blog.userId.toString() == userId || await userService.isAdmin(userId)) {
                 if (body.title) {
                     blog.title = body.title;
                 }
@@ -95,9 +95,6 @@ class blogService {
                 }
                 const updatedBlog = await blog.save();
                 return updatedBlog;
-            } else {
-                throw new Error('User is not owner of blog');
-            }
     }
     
     async getBlogAwaitingApproval(page=1,limit=1000) {
