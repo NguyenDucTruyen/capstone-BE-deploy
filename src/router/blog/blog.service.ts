@@ -18,7 +18,7 @@ class blogService {
             page,
             limit,
             search: { title, content, category },
-            populate: { path: 'userId' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt' },
+            populate: { path: 'userId category' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt', },
             sort: { createdAt: -1 },
             myCustomLabels,
         };
@@ -164,7 +164,7 @@ class blogService {
         }
       }
     async getBlogById(id) {
-        const blog = await Blog.findById(id).populate('userId');
+        const blog = await Blog.findById(id).populate('userId')
         if (!blog) {
             throw new Error('Blog not found');
         }
