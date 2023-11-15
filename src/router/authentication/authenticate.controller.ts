@@ -18,6 +18,7 @@ class AuthenticationController {
             const token = await authenticateService.login(email, password);
             return HttpResponseBuilder.buildOK(res,{message:"Login successfully.", token: token});
         } catch (error:any) {
+            error.status = 401;
             next(error);
           }
     }
@@ -27,6 +28,7 @@ class AuthenticationController {
            await authenticateService.forgotPassword(email);
            return HttpResponseBuilder.buildOK(res,{message:"Email sent successfully."});        
         } catch (error:any) {
+            error.status = 404;
             next(error);
           }
     }
@@ -37,6 +39,7 @@ class AuthenticationController {
             await authenticateService.resetPassword(tokenResetPassword, password);
             return HttpResponseBuilder.buildOK(res,{message:"Password reset successfully."});
         } catch (error:any) {
+            error.status = 400;
             next( error );
           }
     }

@@ -13,6 +13,7 @@ class categoryController {
             
             return HttpResponseBuilder.buildOK(res, data);
         } catch (error:any) {
+            error.status = 404;
             next(error);
         }
     }
@@ -21,6 +22,7 @@ class categoryController {
             const category = categoryService.createCategory(req.body);
             return HttpResponseBuilder.buildCreated(res, category);
         } catch (error:any) {
+            error.status = 400;
             next(error);
         }
     }
@@ -30,7 +32,8 @@ class categoryController {
             console.log(categories);
             
             return HttpResponseBuilder.buildOK(res, categories);
-        } catch (error) {
+        } catch (error:any) {
+            error.status = 400;
             next(error);
         }
     }

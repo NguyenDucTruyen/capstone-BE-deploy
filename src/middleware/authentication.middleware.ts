@@ -27,7 +27,7 @@ export  function verify(req, res, next) {
         throw Error('No token provided');
       }
     } catch (err:any) {
-      err.status = 401;
+      err.status = 403;
       next(err);
     }
   }

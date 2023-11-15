@@ -18,7 +18,7 @@ class blogService {
             page,
             limit,
             search: { title, content, category },
-            populate: { path: 'userId' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt' },
+            populate: { path: 'userId category' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt name slug status' },
             sort: { createdAt: -1 },
             myCustomLabels,
         };
@@ -50,6 +50,7 @@ class blogService {
         const blog = new Blog( {
             userId: userId,
             title: body.title,
+            category: body.category,
             content: body.content,
             category: body.category,
             blogImage: body.blogImages,
@@ -60,6 +61,25 @@ class blogService {
     }
     async updateBlogByIdUser(userId, id, body) {
             const blog = await Blog.findOne({ _id: id, deleted: false, status: statusBlogEnum.APPROVED });
+            if (body.reaction) {
+                // check user is reaction
+                const index = blog.reaction.findIndex((item) => item.userId == userId);
+                if (index !== -1) {
+                    // check like or dislike
+                    if (blog.reaction[index].reaction == body.reaction)
+                    {
+                        blog.reaction.splice(index, 1);
+                    } else {
+                        blog.reaction[index].reaction = body.reaction;
+                    }
+                } else {
+                blog.reaction.push({
+                    userId: userId,
+                    reaction: body.reaction,
+                });
+            } 
+            return await blog.save();
+            }
             if (!blog) {
                 throw new Error('Blog not found or not approved.');
             }
@@ -74,25 +94,6 @@ class blogService {
                 if (body.blogImage) {
                     blog.blogImage = body.blogImage;
                 }
-        
-                if (body.reaction) {
-                    // check user is reaction
-                    const index = blog.reaction.findIndex((item) => item.userId == userId);
-                    if (index !== -1) {
-                        // check like or dislike
-                        if (blog.reaction[index].reaction == body.reaction)
-                        {
-                            blog.reaction.splice(index, 1);
-                        } else {
-                            blog.reaction[index].reaction = body.reaction;
-                        }
-                    } else {
-                    blog.reaction.push({
-                        userId: userId,
-                        reaction: body.reaction,
-                    });
-                }
-                }
                 const updatedBlog = await blog.save();
                 return updatedBlog;
     }
@@ -101,7 +102,7 @@ class blogService {
         const options = {
             page,
             limit,
-            populate: { path: 'userId' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt' },
+            populate: { path: 'userId category' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt name slug status' },
             sort: { createdAt: -1 },
             myCustomLabels,
         };
@@ -124,7 +125,7 @@ class blogService {
         const options = {
             page,
             limit,
-            populate: { path: 'userId' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt' },
+            populate: { path: 'userId category' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt name slug status' },
             sort: { createdAt: -1 },
             myCustomLabels,
         };
@@ -141,8 +142,8 @@ class blogService {
             page,
             limit,
             populate: {
-              path: 'userId',
-              select: '_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt',
+              path: 'userId category',
+              select: '_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt name slug status',
             },
             sort: {
               reactionCount: -1, // Sort in descending order based on the "reactionCount" field
@@ -160,7 +161,7 @@ class blogService {
         }
       }
     async getBlogById(id) {
-        const blog = await Blog.findById(id).populate('userId');
+        const blog = await Blog.findById(id).populate({ path: 'userId category' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt name slug status' })
         if (!blog) {
             throw new Error('Blog not found');
         }
