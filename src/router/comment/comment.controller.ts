@@ -8,7 +8,8 @@ class CommentController {
             const blogId  = req.params.blogId;
             const data = await commentService.getCommentsByIdBlog(blogId);
             return HttpResponseBuilder.buildOK(res,data);
-        } catch (error) {
+        } catch (error:any) {
+            error.status = 404;
             next(error);
         }
     }

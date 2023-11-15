@@ -25,12 +25,12 @@ class categoryService {
           myCustomLabels, // Define myCustomLabels somewhere in your code
         };
     
-        const blogs = await Blog.paginate(query, options);
+        const blogs = await Blog.paginate(query, options)
         console.log(blogs.docs + "aaaaaaaaaa");
         
         return { ...category.toJSON(), blogs: blogs.docs };
       } else {
-        const blogs = await Blog.find(query);
+        const blogs = await Blog.find(query).populate({ path: 'userId' , select:'_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt' })
         console.log(blogs + "aaaaaaaaaa");
         
         return { ...category.toJSON(), blogs };

@@ -12,10 +12,10 @@ export default function errorHandler(err, req, res, next) {
   const messageError = err.messageObject || err.message;
   // create format error response
   const error = {
-    status: err.status || 500, // Set a default status code if not provided
+    status: err.status || 400, // Set a default status code if not provided
     error: messageError
   };
-  const status = err.status || 500; // Set a default status code if not provided
+  const status = err.status || 400; // Set a default status code if not provided
 
   if (res && res.status) {
     return res.status(status).json(error)

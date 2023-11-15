@@ -11,8 +11,9 @@ class UserController {
             limit ? limit : null;
             const users = await userService.getUsers( page, limit );
             return HttpResponseBuilder.buildOK(res, users);
-        }catch(error)
-        {
+        }catch(error:any)
+        {   
+            error.status = 404;
             next(error);
         }
     }

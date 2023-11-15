@@ -11,6 +11,7 @@ class blogController {
             const blogs = await blogService.getAllBlogs(page,limit, title, content, category);
             return HttpResponseBuilder.buildOK(res, blogs);
         } catch (error:any) {
+            error.status = 400;
             next(error);
         }
     }
@@ -22,6 +23,7 @@ class blogController {
             const blog = await blogService.createBlogByIdUser(userId,req.body);
             return HttpResponseBuilder.buildCreated(res, blog);
         } catch (error:any) {
+            error.status = 400;
             next(error);
        }
     }
@@ -32,6 +34,7 @@ class blogController {
             const blog = await blogService.updateBlogByIdUser(userId,id,req.body);
             return HttpResponseBuilder.buildOK(res, blog);
         } catch (error:any) {
+            error.status = 400;
             next(error);
         }
     }
@@ -41,6 +44,7 @@ class blogController {
             const blogs = await blogService.getBlogAwaitingApproval(page,limit);
             return HttpResponseBuilder.buildOK(res,blogs);
         } catch (error:any) {
+            error.status = 404;
             next(error);
         }
     }
@@ -54,6 +58,7 @@ class blogController {
             
             return HttpResponseBuilder.buildOK(res,{message: 'Approved or reject blog successfully'});
         } catch (error:any) {
+            error.status = 404;
             next(error);
         }
     }
@@ -63,6 +68,7 @@ class blogController {
             const blogs = await blogService.getNewestBlog();
             return HttpResponseBuilder.buildOK(res, blogs);
         } catch (error:any) {
+            error.status = 404;
             next(error);
         }
     }
@@ -71,6 +77,7 @@ class blogController {
             const blogs = await blogService.getPopularBlog();
             return HttpResponseBuilder.buildOK(res, blogs);
         } catch (error:any) {
+            error.status = 404;
             next(error);
         }
     }
@@ -90,6 +97,7 @@ class blogController {
             const blog = await blogService.deleteBlogByIdUser(userId,id);
             return HttpResponseBuilder.buildOK(res, { message: 'Blog deleted successfully' , blog });
         } catch (error:any) {
+            error.status = 400;
             next(error);
         }
     }
