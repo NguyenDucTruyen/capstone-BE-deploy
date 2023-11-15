@@ -125,7 +125,7 @@ class AuthenticationService {
             <div class="container">
                 <h1>Forgot Password?</h1>
                 <p>Click the button below to reset your password</p>
-                <a href="http://localhost:3000/api/auth/reset-password/${user.passwordResetToken}" class="rotate">Reset Password</a>
+                <a href="https://forum-sgroup.netlify.app/api/auth/reset-password/${user.passwordResetToken}" class="rotate">Reset Password</a>
             </div>
         </body>
         </html>
