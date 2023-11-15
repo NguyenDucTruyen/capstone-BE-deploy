@@ -50,8 +50,8 @@ class blogService {
         const blog = new Blog( {
             userId: userId,
             title: body.title,
-            content: body.content,
             category: body.category,
+            content: body.content,
             blogImage: body.blogImages,
             status: statusBlogEnum.PENDING,
         })
@@ -60,9 +60,32 @@ class blogService {
     }
     async updateBlogByIdUser(userId, id, body) {
             const blog = await Blog.findOne({ _id: id, deleted: false, status: statusBlogEnum.APPROVED });
+            console.log(blog);
+            
+            if (body.reaction) {                
+                const index = blog.reaction.findIndex((item) => item.userId == userId);
+                if (index == -1 || blog.reaction == null) {
+                    blog.reaction.push({
+                        userId: userId,
+                        reaction: body.reaction,
+                    });
+                    // check like or dislike
+                    
+                } else {
+                    if (blog.reaction[index].reaction == body.reaction)
+                    {
+                        blog.reaction.splice(index, 1);
+                    } else {
+                        blog.reaction[index].reaction = body.reaction;
+                    }
+            }
+            const updatedBlog = await blog.save();
+                return updatedBlog;
+            }
             if (!blog) {
                 throw new Error('Blog not found or not approved.');
             }
+            if (blog.userId.toString() == userId || await userService.isAdmin(userId)) {
                 if (body.title) {
                     blog.title = body.title;
                 }
@@ -75,26 +98,29 @@ class blogService {
                     blog.blogImage = body.blogImage;
                 }
         
-                if (body.reaction) {
-                    // check user is reaction
-                    const index = blog.reaction.findIndex((item) => item.userId == userId);
-                    if (index !== -1) {
-                        // check like or dislike
-                        if (blog.reaction[index].reaction == body.reaction)
-                        {
-                            blog.reaction.splice(index, 1);
-                        } else {
-                            blog.reaction[index].reaction = body.reaction;
-                        }
-                    } else {
-                    blog.reaction.push({
-                        userId: userId,
-                        reaction: body.reaction,
-                    });
-                }
-                }
+                // if (body.reaction) {
+                //     // check user is reaction
+                //     const index = blog.reaction.findIndex((item) => item.userId == userId);
+                //     if (index !== -1) {
+                //         // check like or dislike
+                //         if (blog.reaction[index].reaction == body.reaction)
+                //         {
+                //             blog.reaction.splice(index, 1);
+                //         } else {
+                //             blog.reaction[index].reaction = body.reaction;
+                //         }
+                //     } else {
+                //     blog.reaction.push({
+                //         userId: userId,
+                //         reaction: body.reaction,
+                //     });
+                // }
+                // }
                 const updatedBlog = await blog.save();
                 return updatedBlog;
+            } else {
+                throw new Error('User is not owner of blog');
+            }
     }
     
     async getBlogAwaitingApproval(page=1,limit=1000) {
