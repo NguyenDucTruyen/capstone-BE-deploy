@@ -52,7 +52,6 @@ class blogService {
             title: body.title,
             category: body.category,
             content: body.content,
-            category: body.category,
             blogImage: body.blogImages,
             status: statusBlogEnum.PENDING,
         })
