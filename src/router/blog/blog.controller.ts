@@ -29,6 +29,8 @@ class blogController {
     }
     async updateBlog(req, res, next) {
         try {
+            console.log("update aaaaa");
+            
             const { id } = req.params;
             const userId = req.userToken.id;
             const blog = await blogService.updateBlogByIdUser(userId,id,req.body);
