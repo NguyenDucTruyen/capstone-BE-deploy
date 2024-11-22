@@ -5,10 +5,9 @@ class categoryController {
         this.getCategories = this.getCategories.bind(this);
     }
     async getCategories(req, res, next) {
-        try {
-            console.log("hehehe");
-            
+        try {            
             const { slug } = req.params;
+            console.log("query ngoai:", req);
             const data = await categoryService.getCategories(slug, req.query.page, req.query.limit);
             
             return HttpResponseBuilder.buildOK(res, data);
@@ -29,7 +28,6 @@ class categoryController {
     async getListCategories(req, res, next) {
         try {
             const categories =await categoryService.getListCategories();
-            console.log(categories);
             
             return HttpResponseBuilder.buildOK(res, categories);
         } catch (error:any) {

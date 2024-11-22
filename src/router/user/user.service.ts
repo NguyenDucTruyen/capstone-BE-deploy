@@ -71,7 +71,7 @@ class UserService {
     }
     async getUserById(id) {
         try {
-            const user = await User.findById({_id:id,deleted:false});
+            const user = await User.findById({_id:id,deleted:false}).select('-passwordResetToken -password');
             if(!user) throw new Error('User not found');
             return user;
         } catch(error) {

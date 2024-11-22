@@ -1,16 +1,17 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
-// const uri = `mongodb+srv://dangquangnhatlinh123:${process.env.PASSWORD}@cluster0.8yyrgrm.mongodb.net/sgroup-project?retryWrites=true&w=majority`;
-const uri = `mongodb+srv://dangquangnhatlinh123:${process.env.PASSWORD}@cluster0.8yyrgrm.mongodb.net/dev?retryWrites=true&w=majority`;
+const uri = `mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.0`
 
 async function connect() {
     try {
-        await mongoose.connect(uri);
+        await mongoose.connect(uri, {
+            dbName: process.env.DB_NAME
+        });
         console.log("Connect successfully!!!");
     } catch (error) {
         console.log(error);
-        
+
         console.log("Connect failure!!!");
     }
 }

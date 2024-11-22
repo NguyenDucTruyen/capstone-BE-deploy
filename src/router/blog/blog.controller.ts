@@ -16,9 +16,7 @@ class blogController {
         }
     }
     async createBlog(req, res, next) {
-        try {
-            console.log("aaaa create blog");
-            
+        try {            
             const userId = req.userToken.id           
             const blog = await blogService.createBlogByIdUser(userId,req.body);
             return HttpResponseBuilder.buildCreated(res, blog);
@@ -28,9 +26,7 @@ class blogController {
        }
     }
     async updateBlog(req, res, next) {
-        try {
-            console.log("update aaaaa");
-            
+        try {            
             const { id } = req.params;
             const userId = req.userToken.id;
             const blog = await blogService.updateBlogByIdUser(userId,id,req.body);

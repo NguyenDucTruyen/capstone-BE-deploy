@@ -1,10 +1,9 @@
 import env from 'dotenv';
 env.config();
 export  const mailConfig = {
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
-    }
+  service: process.env.MAIL_SERVICE,
+  auth: {
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASS
+  }
   };

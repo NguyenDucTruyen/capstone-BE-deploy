@@ -1,16 +1,15 @@
 import nodemailer from 'nodemailer';
 import {mailConfig} from '../database/config'
   const mailService = {
-    async sendMail (emailTo, subject, text, html) {
+    async sendMail (emailTo: any, subject: string, html: string) {
       const transporter = nodemailer.createTransport(mailConfig);
   
       transporter.sendMail({
-        from: process.env.SMTP_USER,
+        from: process.env.MAIL_USER,
         to: emailTo,
         subject,
-        text: text || '',
         html: html || ''
-      }, (err, info) => {
+      }, (err: any, info: any) => {
         if (err) {
           console.log(err);
           throw new Error('Error');

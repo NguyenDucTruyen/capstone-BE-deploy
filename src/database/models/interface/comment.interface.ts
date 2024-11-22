@@ -7,6 +7,7 @@ interface IComment extends Document {
         {
         userId: object;
         content: string;
+        createdAt: Date;
         }
     ];
     createdAt: Date;

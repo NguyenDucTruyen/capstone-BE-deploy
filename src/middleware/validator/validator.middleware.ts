@@ -1,7 +1,8 @@
 import { createInboundValidatorByJoi } from './validatorBuilder'
 import Joi from 'joi';
-const EIGHT_CHAR_CONTAINS_ONE_LETTER_AND_ONE_NUMBER_REGEX =
-    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+const STRONG_PASSWORD_REGEX =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+const STRONG_PASSWORD_MESSAGE = 'Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, one number, and one special character'
 
 const validateUserUpdate = createInboundValidatorByJoi(
     Joi.object({
@@ -16,22 +17,26 @@ const validateUserUpdate = createInboundValidatorByJoi(
 const validatePasswordReset = createInboundValidatorByJoi(
     Joi.object({
         password: Joi.string().required()
-        .regex(EIGHT_CHAR_CONTAINS_ONE_LETTER_AND_ONE_NUMBER_REGEX)
-        .message('Password should contains 8 chars with 1 char and 1 num'),
+            .regex(STRONG_PASSWORD_REGEX)
+            .message(STRONG_PASSWORD_MESSAGE),
+        confirmPassword: Joi.any().valid(Joi.ref('password')).required()
+            .messages({ 'any.only': 'Confirm password must match password' })
     })
 );
 
 const validateStatusUser = createInboundValidatorByJoi(
     Joi.object({
-        isActive: Joi.string().required().valid('active','blockposting','blockcomment','banner'),
+        isActive: Joi.string().required().valid('active', 'blockposting', 'blockcomment', 'banner'),
     })
 );
 const validateUserRegister = createInboundValidatorByJoi(
     Joi.object({
         email: Joi.string().email().required(),
         password: Joi.string().required()
-        .regex(EIGHT_CHAR_CONTAINS_ONE_LETTER_AND_ONE_NUMBER_REGEX)
-        .message('Password should contains 8 chars with 1 char and 1 num'),
+            .regex(STRONG_PASSWORD_REGEX)
+            .message(STRONG_PASSWORD_MESSAGE),
+        confirmPassword: Joi.any().valid(Joi.ref('password')).required()
+            .messages({ 'any.only': 'Confirm password must match password' })
     })
 );
 const validateUpdateBlogs = createInboundValidatorByJoi(
@@ -40,10 +45,10 @@ const validateUpdateBlogs = createInboundValidatorByJoi(
         content: Joi.string(),
         blogImage: Joi.string(),
         category: Joi.string(),
-        reaction: Joi.string().valid('like','dislike'),
+        reaction: Joi.string().valid('like', 'dislike'),
     })
 );
-export { 
+export {
     validateUserRegister,
     validateUserUpdate,
     validateStatusUser,
