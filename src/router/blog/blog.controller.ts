@@ -62,8 +62,10 @@ class blogController {
     }
     async getNewestBlog(req, res, next) {
         try {
-            
-            const blogs = await blogService.getNewestBlog();
+            const { page, limit } = req.query;
+            page ? page : null;
+            limit ? limit : null;
+            const blogs = await blogService.getNewestBlog(page,limit);
             return HttpResponseBuilder.buildOK(res, blogs);
         } catch (error:any) {
             error.status = 404;
@@ -72,7 +74,10 @@ class blogController {
     }
     async getPopularBlog(req, res, next) {
         try {
-            const blogs = await blogService.getPopularBlog();
+            const { page, limit } = req.query;
+            page ? page : null;
+            limit ? limit : null;
+            const blogs = await blogService.getPopularBlog(page, limit);
             return HttpResponseBuilder.buildOK(res, blogs);
         } catch (error:any) {
             error.status = 404;

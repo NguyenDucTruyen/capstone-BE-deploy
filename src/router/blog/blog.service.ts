@@ -141,7 +141,7 @@ class blogService {
         const blogUpdated = await blog.save();
         return blogUpdated;
     }
-    async getNewestBlog(limit = 100000, page = 1) {
+    async getNewestBlog(page = 1, limit = 5) {
         const options = {
             page,
             limit,
