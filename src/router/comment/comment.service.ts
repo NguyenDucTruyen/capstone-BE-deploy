@@ -18,7 +18,6 @@ class UserService {
 	}
 	async updateComment(userId, commentId, content) {
 		const comment: any = await Comment.findById(commentId);
-		console.log(comment.userId != userId);
 		if (comment.userId == userId || await userService.isAdmin(userId)) {
 			return Comment.updateOne({ _id: commentId }, { $set: { content: content } });
 		} else {

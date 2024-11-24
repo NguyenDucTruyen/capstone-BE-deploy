@@ -11,7 +11,6 @@ import {mailConfig} from '../database/config'
         html: html || ''
       }, (err: any, info: any) => {
         if (err) {
-          console.log(err);
           throw new Error('Error');
         }
       }

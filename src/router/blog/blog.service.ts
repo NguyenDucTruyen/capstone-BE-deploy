@@ -175,7 +175,6 @@ class blogService {
                 status: statusBlogEnum.APPROVED,
             };
             const result = await Blog.paginate(query, options);
-            console.log("get popular blog result:", result)
             return result;
         } catch (error: any) {
             throw new Error(error.message);

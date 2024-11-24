@@ -7,8 +7,9 @@ class categoryController {
     async getCategories(req, res, next) {
         try {            
             const { slug } = req.params;
-            console.log("query ngoai:", req);
-            const data = await categoryService.getCategories(slug, req.query.page, req.query.limit);
+            const { title } = req.query;
+            console.log("query controller:", req.params);
+            const data = await categoryService.getCategories(slug,title, req.query.page, req.query.limit);
             
             return HttpResponseBuilder.buildOK(res, data);
         } catch (error:any) {

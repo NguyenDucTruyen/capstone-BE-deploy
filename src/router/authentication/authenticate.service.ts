@@ -7,21 +7,6 @@ class AuthenticationService {
     constructor() {
 
     }
-    // async register(password, email) {
-    //         const existingUser = await User.findOne({ email: email, deleted: false });
-    //         if (existingUser) {
-    //             console.log("Email already exists");
-
-    //             return Error("Email already exists");
-    //         }
-
-    //         const salt = bcrypt.genSaltSync(10);
-    //         const hashPasswordUser = bcrypt.hashSync(password, salt);
-
-    //         const passwordResetToken = crypto.randomBytes(20).toString('hex');
-    //         await User.create({ email: email, password: hashPasswordUser, passwordResetToken: passwordResetToken });
-    //         return;
-    // }
     async register(password, email) {
         const existingUser = await User.findOne({ email: email, deleted: false });
         if (existingUser) {

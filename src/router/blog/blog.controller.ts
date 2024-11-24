@@ -51,9 +51,7 @@ class blogController {
             const { id } = req.params;
             const { status} = req.body;
             
-            const blog = await blogService.approvedOrRejectBlog(id,status);
-            console.log(blog);
-            
+            await blogService.approvedOrRejectBlog(id,status);
             return HttpResponseBuilder.buildOK(res,{message: 'Approved or reject blog successfully'});
         } catch (error:any) {
             error.status = 404;
