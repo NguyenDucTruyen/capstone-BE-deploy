@@ -54,62 +54,19 @@ class AuthenticationService {
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Password Reset</title>
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
-                <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-                <style>
-                    body {
-                        font-family: 'Roboto', sans-serif;
-                        background-color: #f7fafc;
-                        padding: 20px;
-                    }
-                    .container {
-                        max-width: 32rem;
-                        margin: 0 auto;
-                        background-color: #ffffff;
-                        padding: 24px;
-                        border-radius: 0.5rem;
-                        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-                    }
-                    .title {
-                        font-size: 1.5rem;
-                        font-weight: 700;
-                        color: #2d3748;
-                        margin-bottom: 16px;
-                    }
-                    .text {
-                        color: #4a5568;
-                        margin-bottom: 16px;
-                    }
-                    .code {
-                        background-color: #ebf8ff;
-                        color: #2b6cb0;
-                        border: 1px solid #bee3f8;
-                        border-radius: 0.5rem;
-                        padding: 12px;
-                        font-weight: 700;
-                        text-align: center;
-                        margin-bottom: 16px;
-                    }
-                    .footer {
-                        text-align: center;
-                        color: #a0aec0;
-                        font-size: 0.875rem;
-                        margin-top: 24px;
-                    }
-                </style>
             </head>
-            <body>
-                <div class="container">
-                    <h1 class="title">Password Reset Request</h1>
-                    <p class="text">Hello,</p>
-                    <p class="text">We received a request to reset your password. Please use the code below to reset it:</p>
-                    <div class="code">${ user.passwordResetToken }</div>
-                    <p class="text">Enter this code on the password reset page to create a new password.</p>
-                    <p class="text">If you did not request a password reset, please ignore this email.</p>
-                    <p class="text">Thank you,</p>
-                    <p class="text">S-Forum</p>
+            <body style="font-family: 'Roboto', sans-serif; background-color: #f7fafc; padding: 20px;">
+                <div style="max-width: 32rem; margin: 0 auto; background-color: #ffffff; padding: 24px; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);">
+                    <h1 style="font-size: 1.5rem; font-weight: 700; color: #2d3748; margin-bottom: 16px;">Password Reset Request</h1>
+                    <p style="color: #4a5568; margin-bottom: 16px;">Hello,</p>
+                    <p style="color: #4a5568; margin-bottom: 16px;">We received a request to reset your password. Please use the code below to reset it:</p>
+                    <div style="background-color: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; border-radius: 0.5rem; padding: 12px; font-weight: 700; text-align: center; margin-bottom: 16px;">${ user.passwordResetToken }</div>
+                    <p style="color: #4a5568; margin-bottom: 16px;">Enter this code on the password reset page to create a new password.</p>
+                    <p style="color: #4a5568; margin-bottom: 16px;">If you did not request a password reset, please ignore this email.</p>
+                    <p style="color: #4a5568; margin-bottom: 16px;">Thank you,</p>
+                    <p style="color: #4a5568; margin-bottom: 16px;">S-Forum</p>
                 </div>
-                <div class="footer">
+                <div style="text-align: center; color: #a0aec0; font-size: 0.875rem; margin-top: 24px;">
                     <p>&copy; 2024 S-Forum. All rights reserved.</p>
                 </div>
             </body>
