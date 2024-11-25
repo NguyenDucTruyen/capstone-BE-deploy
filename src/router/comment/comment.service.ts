@@ -25,7 +25,7 @@ class UserService {
 		}
 	}
 	async deleteComment(userId, commentId) {
-		const comment: any = Comment.findById(commentId);
+		const comment: any = await Comment.findById(commentId);
 		if (comment.userId == userId || await userService.isAdmin(userId)) {
 			return Comment.deleteOne({ _id: commentId });
 		} else {
