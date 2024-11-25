@@ -31,23 +31,26 @@ class UserService {
             if(user.roleName == 'ADMIN' || user.roleName == 'MODERATOR') return true;
             return false;
     }
-        
+    
     async updateUser(idToken, id, body) {    
         try {
-            
-            // check admin or moderator can edit user
             if (idToken == id || await this.isAdmin(idToken)) {
-            const user = await User.findById({_id:id,deleted:false});
-            if(!user) throw new Error('User not found');
-            user.set(body);
-            await user.save();
+                const user = await User.findOne({ _id: id, deleted: false }).select('_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt');
+                if (!user) throw new Error('User not found');
+                
+                
+                user.set(body);
+                const updatedUser = await user.save(); 
+    
+                return updatedUser;
             } else {
                 throw new Error('You are not allowed to edit this user');
             }
-        } catch(error) {
+        } catch (error) {
             throw error;
         }
     }
+    
     async deleteUser(id) {
         try {
             const user = await User.findById({_id:id,deleted:false});
