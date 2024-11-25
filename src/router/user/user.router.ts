@@ -1,12 +1,16 @@
 import express from 'express';
 import { userController } from './index';
 import { validateUserUpdate, verify, checkAuthor,validateStatusUser } from '../../middleware/';
+import { validateChangePassword } from '../../middleware/';
+
 const router = express.Router();
 
 router.get('/:id/blogs', userController.getBlogsByUserId);
 router.get('/', checkAuthor(['ADMIN','MODERATOR']) ,userController.getUsers);
 router.get('/me',userController.getMe);
 router.get('/:id', userController.getUserById);
+router.post('/changePassword', validateChangePassword, checkAuthor(['ADMIN', 'MODERATOR', 'USER']), userController.changePassword);
+
 router.put('/:id',validateUserUpdate ,verify,checkAuthor(['ADMIN','MODERATOR','USER']),userController.updateUser);
 router.delete('/:id',verify, checkAuthor(['ADMIN','MODERATOR']) , userController.deleteUser);
 

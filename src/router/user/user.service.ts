@@ -1,4 +1,5 @@
 import { Blog, User } from '../../database/models';
+import bcrypt from 'bcrypt';
 import { myCustomLabels } from '../../constant';
 class UserService {
     _constructor() {
@@ -94,6 +95,26 @@ class UserService {
         if(!user) throw new Error('User not found');
         await user.set({profileImage:avatar});
         await user.save();
+    }
+    
+    async changePassword(userId, password, newPassword) {
+        try {
+            const user = await User.findOne({ _id: userId, deleted: false });
+            if (user === null) {
+                throw new Error("Email not exists");
+            }
+            const isMatch = bcrypt.compareSync(password, user.password);
+            if (!isMatch) {
+                throw Error("Password not match");
+            }
+            const salt = bcrypt.genSaltSync(10);
+            const hashPasswordUser = bcrypt.hashSync(newPassword, salt);
+            await user.set({ password: hashPasswordUser });
+            await user.save();
+            return;
+        } catch (error) {
+            throw error;
+        }
     }
     async getBlogsByUserId(id, page=1, limit=1000) {
         try {

@@ -95,6 +95,18 @@ class UserController {
             next(error);
         }
     }
+    
+    async changePassword(req, res, next) {
+        try {
+            const { password, newPassword } = req.body;
+            const userId = req.userToken.id;
+            await userService.changePassword(userId, password, newPassword);
+            return HttpResponseBuilder.buildOK(res,{message:"Password changed successfully."});
+        } catch (error:any) {
+            error.status = 400;
+            next( error );
+          }
+    }
 
 }
 

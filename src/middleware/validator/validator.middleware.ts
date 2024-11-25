@@ -23,6 +23,16 @@ const validatePasswordReset = createInboundValidatorByJoi(
             .messages({ 'any.only': 'Confirm password must match password' })
     })
 );
+const validateChangePassword = createInboundValidatorByJoi(
+    Joi.object({
+        password: Joi.string().required(),
+        newPassword: Joi.string().required()
+            .regex(STRONG_PASSWORD_REGEX)
+            .message(STRONG_PASSWORD_MESSAGE),
+        confirmNewPassword: Joi.any().valid(Joi.ref('newPassword')).required()
+            .messages({ 'any.only': 'Confirm password must match password' })
+    })
+);
 
 const validateStatusUser = createInboundValidatorByJoi(
     Joi.object({
@@ -53,5 +63,6 @@ export {
     validateUserUpdate,
     validateStatusUser,
     validatePasswordReset,
+    validateChangePassword,
     validateUpdateBlogs
 };
