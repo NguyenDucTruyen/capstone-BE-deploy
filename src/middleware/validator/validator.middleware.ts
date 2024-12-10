@@ -6,12 +6,12 @@ const STRONG_PASSWORD_MESSAGE = 'Password must be at least 8 characters long, in
 
 const validateUserUpdate = createInboundValidatorByJoi(
     Joi.object({
-        firstName: Joi.string().min(3).max(30).required(),
-        lastName: Joi.string().min(3).max(30).required(),
+        firstName: Joi.string().min(3).max(30).allow('').required(),
+        lastName: Joi.string().min(3).max(30).allow('').required(),
         gender: Joi.boolean().required(),
         phone: Joi.number().required(),
         dayOfBirth: Joi.date().required(),
-        profileImage: Joi.string()
+        profileImage: Joi.string().allow('')
     })
 );
 const validatePasswordReset = createInboundValidatorByJoi(

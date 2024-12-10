@@ -26,9 +26,13 @@ class AuthenticationService {
 
     async login(email, password) {
         try {
-            const user = await User.findOne({ email: email, deleted: false });
+            const user = await User.findOne({ email: email, deleted: false});
             if (user === null) {
                 throw new Error("Email not exists");
+            }
+            
+            if(user.isActive !=='active') {
+                throw new Error("Account is not active");
             }
 
             const isMatch = bcrypt.compareSync(password, user.password);

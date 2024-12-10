@@ -1,6 +1,7 @@
 import { Blog, User } from '../../database/models';
 import bcrypt from 'bcrypt';
 import { myCustomLabels } from '../../constant';
+import { statusBlogEnum } from '../../database/models/enum';
 class UserService {
     _constructor() {
     }
@@ -129,7 +130,7 @@ class UserService {
                 select: 'category title content blogImage reaction createdAt updatedAt',
                 myCustomLabels,
             };
-            return await Blog.paginate({ userId: id, deleted: false }, options, function (err, result) {
+            return await Blog.paginate({ userId: id, deleted: false,status: statusBlogEnum.APPROVED }, options, function (err, result) {
                 if (err) throw new Error('Error');
                 return result;
             });

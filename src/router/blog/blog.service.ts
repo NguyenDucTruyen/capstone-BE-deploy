@@ -118,16 +118,25 @@ class blogService {
         }
     }
 
-    async getBlogAwaitingApproval(page = 1, limit = 1000) {
+    async getBlogAwaitingApproval(page = 1, limit = 1000, title = '') {
         const options = {
             page,
             limit,
+            search: { title },
             populate: { path: 'userId category', select: '_id firstName lastName email gender phone dayOfBirth profileImage isActive roleName createdAt updatedAt name slug status' },
             sort: { createdAt: -1 },
             myCustomLabels,
         };
-        return await Blog.paginate({ deleted: false, status: statusBlogEnum.PENDING }, options, function (err, result) {
-            if (err) throw new Error('Error');
+        const query: any = {
+            deleted: false,
+            status: statusBlogEnum.PENDING,
+        };
+        if (title) {
+            query.title = { $regex: title, $options: 'i' };
+        }
+        return await Blog.paginate(query, options, function (err, result) {
+            if (err)
+                throw new Error('Error');
             return result;
         });
     }
